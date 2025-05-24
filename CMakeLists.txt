@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(float16)
 
-find_package(ament_cmake_auto QUIET)
+if(DEFINED ENV{COLCON_PREFIX_PATH})
+  find_package(ament_cmake_auto REQUIRED)
 
-if(ament_cmake_auto_FOUND)
   ament_auto_find_build_dependencies()
 
   ament_auto_package()
@@ -12,9 +12,5 @@ else()
 
   target_include_directories(${PROJECT_NAME} INTERFACE
       include
-  )
-
-  target_link_libraries(${PROJECT_NAME} INTERFACE
-      float16
   )
 endif()
