@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(float16)
 
-if(DEFINED ENV{COLCON_PREFIX_PATH})
+if(DEFINED ENV{COLCON} AND "$ENV{COLCON}" STREQUAL "1")
   find_package(ament_cmake_auto REQUIRED)
 
   ament_auto_find_build_dependencies()
