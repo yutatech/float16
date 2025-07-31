@@ -13,12 +13,12 @@ class float16 {
  private:
   int16_t data_;
 
-  int16_t FloatCompress(float float32_value) const {
+  inline static int16_t FloatCompress(const float& float32_value) {
     if (float32_value == 0) return 0;
-    int32_t data_f = *reinterpret_cast<int32_t*>(&float32_value);
-    int16_t sign = data_f >> 16 & 0b1 << 15;
-    int16_t exp = (((data_f >> 23) - 127 + 15) & 0x1f) << 10;
-    int16_t frac = (data_f >> (23 - 10)) & 0x3ff;
+    const int32_t data_f = *reinterpret_cast<const int32_t*>(&float32_value);
+    const int16_t sign = data_f >> 16 & 0b1 << 15;
+    const int16_t exp = (((data_f >> 23) - 127 + 15) & 0x1f) << 10;
+    const int16_t frac = (data_f >> (23 - 10)) & 0x3ff;
 
     // 数値の絶対値が大きすぎるときは最大値に符号をつけて返す
     if (((data_f & (~(0b1 << 31))) >> 23) - 127 > 15)
@@ -30,18 +30,19 @@ class float16 {
     return sign | exp | frac;
   }
 
-  float FloatDecompress(int16_t float16_data) const {
+  inline static float FloatDecompress(const int16_t& float16_data) {
     if (float16_data == 0) return 0;
-    int32_t sign = (float16_data & 0b1 << 15) << 16;
-    int32_t exp = ((((float16_data >> 10) & 0x1f) - 15 + 127) & 0xff) << 23;
-    int32_t frac = (float16_data & 0x3ff) << (23 - 10);
-    int32_t data_f = sign | exp | frac;
-    return *reinterpret_cast<float*>(&data_f);
+    const int32_t sign = (float16_data & 0b1 << 15) << 16;
+    const int32_t exp = ((((float16_data >> 10) & 0x1f) - 15 + 127) & 0xff)
+                        << 23;
+    const int32_t frac = (float16_data & 0x3ff) << (23 - 10);
+    const int32_t data_f = sign | exp | frac;
+    return *reinterpret_cast<const float*>(&data_f);
   }
 
  public:
   float16() = default;
-  explicit(false) float16(float float32_value)  // NO_LINT
+  explicit(false) float16(const float& float32_value)  // NO_LINT
       : data_(FloatCompress(float32_value)) {}
   operator float() const { return FloatDecompress(data_); }
   //
