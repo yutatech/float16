@@ -6,7 +6,7 @@ if(DEFINED ENV{COLCON} AND "$ENV{COLCON}" STREQUAL "1")
 
   ament_auto_find_build_dependencies()
 
-  ament_auto_package()
+  ament_auto_package(USE_SCOPED_HEADER_INSTALL_DIR)
 else()
   add_library(${PROJECT_NAME} INTERFACE)
 
